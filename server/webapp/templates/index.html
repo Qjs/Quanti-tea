@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metrics Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .metric-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .metric-name {
+            flex: 2;
+        }
+        .metric-type {
+            flex: 1;
+        }
+        .metric-value {
+            flex: 1;
+            text-align: center;
+        }
+        .metric-actions {
+            flex: 2; /* Increased flex to accommodate delete button */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">Quanti-Tea Metrics Dashboard</h1>
+    
+    <!-- Add Metric Form -->
+    <div class="card mt-4">
+        <div class="card-header">
+            Add New Metric
+        </div>
+        <div class="card-body">
+            <form action="/add" method="POST" class="row g-3">
+                <div class="col-md-4">
+                    <label for="metric_name" class="form-label">Metric Name</label>
+                    <input type="text" class="form-control" id="metric_name" name="metric_name" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="metric_type" class="form-label">Metric Type</label>
+                    <input type="text" class="form-control" id="metric_type" name="metric_type" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="metric_unit" class="form-label">Metric unit</label>
+                    <input type="text" class="form-control" id="metric_unit" name="metric_unit" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input" type="checkbox" id="reset_daily" name="reset_daily">
+                        <label class="form-check-label" for="reset_daily">
+                            Reset Daily
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary mt-3">Add Metric</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Display Metrics -->
+    <h2 class="mt-5">Existing Metrics</h2>
+    {{if .Metrics}}
+    <div class="list-group">
+        {{range .Metrics}}
+        <div class="metric-row">
+            <div class="metric-name">{{.MetricName}}</div>
+            <div class="metric-type">{{.Type}}</div>
+            <div class="metric-unit">{{.Unit}}</div>
+            <div class="metric-value">{{.Value}}</div>
+            <div class="metric-actions">
+                <form action="/increment" method="POST" style="display:inline;">
+                    <input type="hidden" name="metric_name" value="{{.MetricName}}">
+                    <button type="submit" class="btn btn-success btn-sm">+</button>
+                </form>
+                <form action="/decrement" method="POST" style="display:inline;">
+                    <input type="hidden" name="metric_name" value="{{.MetricName}}">
+                    <button type="submit" class="btn btn-danger btn-sm">-</button>
+                </form>
+                <form action="/update" method="POST" class="d-inline ms-2">
+                    <input type="hidden" name="metric_name" value="{{.MetricName}}">
+                    <div class="input-group input-group-sm">
+                        <input type="number" class="form-control" name="new_value" placeholder="Set Value" required>
+                        <button class="btn btn-secondary" type="submit">Update</button>
+                    </div>
+                </form>
+                <!-- Delete Metric Form -->
+                <form action="/delete" method="POST" class="d-inline ms-2">
+                    <input type="hidden" name="metric_name" value="{{.MetricName}}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this metric?');">Delete</button>
+                </form>
+            </div>
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    <p>No metrics available.</p>
+    {{end}}
+    
+    <!-- Display Messages -->
+    {{if .Message}}
+    <div class="alert alert-info mt-4" role="alert">
+        {{.Message}}
+    </div>
+    {{end}}
+    {{if .Error}}
+    <div class="alert alert-danger mt-4" role="alert">
+        {{.Error}}
+    </div>
+    {{end}}
+</div>
+</body>
+</html>
