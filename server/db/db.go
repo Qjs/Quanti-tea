@@ -231,17 +231,8 @@ func (db *Database) DecrementMetric(metricName string, decrement float64) error 
 	return nil
 }
 
-// isSameDay checks if two times are on the same calendar day
-func isSameDay(t1, t2 time.Time) bool {
-	y1, m1, d1 := t1.Date()
-	y2, m2, d2 := t2.Date()
-	return y1 == y2 && m1 == m2 && d1 == d2
-}
-
 // ResetDailyMetrics resets all metrics that are marked to reset daily and haven't been reset today
 func (db *Database) ResetDailyMetrics() error {
-
-	now := time.Now()
 
 	// Get all metrics
 	metrics, err := db.GetMetrics()
@@ -251,7 +242,7 @@ func (db *Database) ResetDailyMetrics() error {
 
 	// Iterate over the metrics and reset those that are marked to reset daily
 	for _, metric := range metrics {
-		if metric.ResetDaily && !isSameDay(now, metric.LastReset) {
+		if metric.ResetDaily {
 			// Reset the metric's value to 0 and update the last reset time
 			err := db.UpdateMetric(metric.MetricName, 0)
 			if err != nil {
