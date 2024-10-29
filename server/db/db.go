@@ -261,7 +261,7 @@ func (db *Database) StartDailyResetScheduler(stopChan chan bool) {
 	// Define a function to schedule the next reset
 	var scheduleReset func()
 	scheduleReset = func() {
-		now := time.Now().UTC()
+		now := time.Now().Local()
 		nextMidnight := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
 		durationUntilMidnight := nextMidnight.Sub(now)
 
