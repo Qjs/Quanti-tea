@@ -262,7 +262,7 @@ func (db *Database) StartDailyResetScheduler(stopChan chan bool) {
 	var scheduleReset func()
 	scheduleReset = func() {
 		now := time.Now().Local()
-		nextMidnight := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
+		nextMidnight := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.Local)
 		durationUntilMidnight := nextMidnight.Sub(now)
 
 		// Schedule the ResetDailyMetrics function to execute at midnight
