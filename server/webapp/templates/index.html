@@ -88,7 +88,7 @@
                 <form action="/update" method="POST" class="d-inline ms-2">
                     <input type="hidden" name="metric_name" value="{{.MetricName}}">
                     <div class="input-group input-group-sm">
-                        <input type="number" class="form-control" name="new_value" placeholder="Set Value" required>
+                        <input type="number" class="form-control" name="new_value" placeholder="Set Value" step="any"required>
                         <button class="btn btn-secondary" type="submit">Update</button>
                     </div>
                 </form>
